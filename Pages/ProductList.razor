@@ -1,0 +1,45 @@
+﻿@page "/productlist"
+@using ProductCRUD.Models;
+@using ProductCRUD.Services;
+@inject IProductService ProductService
+<h3>ProductList</h3>
+@if (products == null || products.Length == 0)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Product Id</th>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Stock Unit</th>
+                <th>Detail</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in products)
+            {
+                <tr>
+                    <td>@product.Id</td>
+                    <td>@product.Title</td>
+                    <td>@product.Price</td>
+                    <td>@product.Stock</td>
+                    <td>@product.Description</td>
+                </tr>
+
+            }
+            
+        </tbody>
+    </table>
+}
+
+@code {
+    ProductListViewModel[]? products;
+    protected override async Task OnInitializedAsync()
+    {
+        products = await ProductService.GetProducts();
+    }
+}

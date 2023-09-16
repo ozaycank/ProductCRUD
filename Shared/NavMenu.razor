@@ -1,7 +1,7 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">ProductCRUD</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+        <a class="navbar-brand" href="/">ProductCRUD</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu" aria-label="Toggle navigation menu">
             <span class="navbar-toggler-icon"></span>
         </button>
     </div>
@@ -22,6 +22,11 @@
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="fetchdata">
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="productlist">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Product List
             </NavLink>
         </div>
     </nav>
