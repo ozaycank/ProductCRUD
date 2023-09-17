@@ -1,0 +1,67 @@
+﻿@page "/productdetail/{productid:int}"
+@using ProductCRUD.Models;
+@using ProductCRUD.Services;
+@inject IProductService ProductService
+@inject ICategoryService CategoryService
+@using ProductCRUD.Utilities;
+@inject NavigationManager NavigationManager
+
+
+@if (product != null)
+{
+    <h3>ProductDetail for @product.Title</h3>
+    <EditForm Model="@product" OnValidSubmit="@HandleSave">
+        <DataAnnotationsValidator />
+        @*<ValidationSummary />*@
+        <div class="form-group">
+            <InputText Placeholder="Product Name" Class="form-control" Id="productName" @bind-Value="@product.Title" />
+            <ValidationMessage For="@(()=>product.Title)" />
+        </div>
+
+        <div class="form-group">
+            <InputTextArea Placeholder="Description" Class="form-control" Id="description" @bind-Value="@product.Description" />
+            <ValidationMessage For="@(()=>product.Description)" />
+        </div>
+
+        <div class="form-group">
+            @if (categories != null)
+            {
+                <InputSelectNumber Class="form-control" Id="categoryId" @bind-Value="@product.CategoryId">
+                    @foreach (var category in categories)
+                            {
+                        <option value=@category.CategoryId>@category.CategoryName</option>
+                            }
+                    /**/
+                    /**/
+                </InputSelectNumber>
+            }
+
+            <ValidationMessage For="@(()=>product.CategoryId)" />
+        </div>
+
+        <button class="btn btn-primary" type="submit">Kaydet</button>
+
+    </EditForm>
+}
+else
+{
+    <h4>Geliyor...</h4>
+}
+
+@code {
+    [Parameter]
+    public int ProductId { get; set; }
+    Product product;
+    Category[] categories;
+    protected override async Task OnInitializedAsync()
+    {
+        product = await ProductService.GetProductById(ProductId);
+        categories = await CategoryService.GetCategories();
+    }
+
+    private void HandleSave()
+    {
+        ProductService.Save(product);
+        Console.WriteLine("Product Added");
+    }
+}

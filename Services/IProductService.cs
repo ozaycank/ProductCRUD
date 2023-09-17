@@ -1,13 +1,14 @@
 ﻿using ProductCRUD.Models;
+using System.Threading.Tasks;
 
 namespace ProductCRUD.Services
 {
     public interface IProductService
     {
-        Task<ProductListViewModel[]> GetProducts();
-        Task Add(ProductListViewModel productListViewModel);
-        Task Save(ProductListViewModel productListViewModel);
-        Task<ProductListViewModel> GetProductById(int Id);
+        Task<Product[]> GetProducts();
+        Task<Product> GetProductById(int productId);
+        Task Save(Product product);
+        Task Add(Product product);
 
     }
 }

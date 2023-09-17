@@ -1,7 +1,12 @@
 ﻿@page "/productlist"
+@using System.Net.Http.Headers
+@using Blazor.Extensions.Storage
 @using ProductCRUD.Models;
 @using ProductCRUD.Services;
+@inject HttpClient Http
 @inject IProductService ProductService
+@inject LocalStorage LocalStorage
+@inject NavigationManager NavigationManager
 <h3>ProductList</h3>
 @if (products == null || products.Length == 0)
 {
@@ -28,6 +33,7 @@ else
                     <td>@product.Price</td>
                     <td>@product.Stock</td>
                     <td>@product.Description</td>
+                    <th><button class=" btn btn-primary btn-sm" @onclick="@(()=>GoToDetail(product.Id))"></button></th>
                 </tr>
 
             }
@@ -37,9 +43,22 @@ else
 }
 
 @code {
-    ProductListViewModel[]? products;
+    Product[] products;
+
     protected override async Task OnInitializedAsync()
     {
+
+        if (!Http.DefaultRequestHeaders.Contains("Authorization"))
+        {
+            var token = await LocalStorage.GetItem<string>("token");
+            Http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        }
         products = await ProductService.GetProducts();
+    }
+
+    void GoToDetail(int productId)
+    {
+        NavigationManager.NavigateTo("/productdetail/" + productId);
     }
 }

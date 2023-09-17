@@ -1,71 +1,35 @@
 ﻿using ProductCRUD.Models;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
+using System.Net.Http.Json; 
 
 namespace ProductCRUD.Services
 {
     public class ProductService : IProductService
     {
-        private readonly HttpClient _httpClient;
+        private HttpClient _httpClient;
 
         public ProductService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
-        public async Task<ProductListViewModel> GetProductById(int Id)
+        public Task<Product[]> GetProducts()
         {
-            return await _httpClient.GetFromJsonAsync<ProductListViewModel>($"products/{Id}");
+            return _httpClient.GetFromJsonAsync<Product[]>("https://localhost:44335/api/products/getall"); // Updated method
         }
 
-        public async Task<ProductListViewModel[]> GetProducts()
+        public Task<Product> GetProductById(int productId)
         {
-            return await _httpClient.GetFromJsonAsync<ProductListViewModel[]>("products");
+            return _httpClient.GetFromJsonAsync<Product>("https://localhost:44335/api/products/getbyid?productId=" + productId); // Updated method
         }
 
-        public async Task Add(ProductListViewModel productListViewModel)
+        public async Task Save(Product product)
         {
-            await _httpClient.PostAsJsonAsync("products", productListViewModel);
+            await _httpClient.PostAsJsonAsync("https://localhost:44335/api/products/update", product); // Updated method
         }
 
-        public async Task Save(ProductListViewModel productListViewModel)
+        public async Task Add(Product product)
         {
-            if (productListViewModel.Id == 0)
-            {
-                // This is a new product, so we'll add it
-                await Add(productListViewModel);
-            }
-            else
-            {
-                // This is an existing product, so we'll update it
-                await _httpClient.PutAsJsonAsync($"products/{productListViewModel.Id}", productListViewModel);
-            }
-        }
-
-        public async Task<string[]> GetCategories()
-        {
-            return await _httpClient.GetFromJsonAsync<string[]>("products/categories");
-        }
-
-        public async Task<ProductListViewModel[]> GetProductsByCategory(string category)
-        {
-            return await _httpClient.GetFromJsonAsync<ProductListViewModel[]>($"products/category/{category}");
-        }
-
-        //public async Task<Cart> GetCart(int userId)
-        //{
-        //    return await _httpClient.GetFromJsonAsync<Cart>($"carts?userId={userId}");
-        //}
-
-        public async Task<ProductListViewModel[]> GetLimitedProducts(int limit)
-        {
-            return await _httpClient.GetFromJsonAsync<ProductListViewModel[]>($"products?limit={limit}");
-        }
-
-        public async Task DeleteProduct(int Id)
-        {
-            await _httpClient.DeleteAsync($"products/{Id}");
+            await _httpClient.PostAsJsonAsync("https://localhost:44335/api/products/add", product); // Updated method
         }
     }
 }

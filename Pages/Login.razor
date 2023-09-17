@@ -1,0 +1,41 @@
+﻿@page "/login"
+@using Blazor.Extensions.Storage
+@using ProductCRUD.Models
+@using ProductCRUD.Services
+@using ProductCRUD.Utilities
+@inject NavigationManager NavigationManager
+
+@inject HttpClient Http
+@inject IAuthService AuthService
+
+@inject LocalStorage LocalStorage
+
+
+<h3>Login</h3>
+<EditForm Model="@loginModel" OnValidSubmit="@HandleLogin">
+    <DataAnnotationsValidator />
+    @*<ValidationSummary />*@
+    <div class="form-group">
+        <InputText Placeholder="E-mail" Class="form-control" Id="email" @bind-Value="@loginModel.Email" />
+        <ValidationMessage For="@(()=>loginModel.Email)" />
+    </div>
+    <div class="form-group">
+        <InputText Placeholder="Password" Class="form-control" Id="password" @bind-Value="@loginModel.Password" />
+        <ValidationMessage For="@(()=>loginModel.Password)" />
+    </div>
+
+
+    <button class="btn btn-primary" type="submit">Login</button>
+
+</EditForm>
+
+
+@code {
+
+    LoginModel loginModel = new LoginModel();
+
+    private async Task HandleLogin()
+    {
+       await AuthService.Login(loginModel);
+    }
+}
